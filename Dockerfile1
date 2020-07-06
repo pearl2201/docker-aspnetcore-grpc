@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 as builder
+
+WORKDIR /protoc
+RUN apt-get -qq update && apt-get -qq install -y \
+  unzip
+RUN curl -sSL https://github.com/protocolbuffers/protobuf/releases/download/v3.12.2/\
+protoc-3.12.2-linux-x86_64.zip -o protoc.zip && \
+  unzip -qq protoc.zip && rm protoc.zip
+RUN cp /protoc/bin/protoc /usr/local/bin/protoc  
+ENV PATH /protoc/bin:/opt/include:/opt:$PATH
+RUN cp -a /protoc/include /usr/local/include/
+RUN cp -a /protoc/include /opt
+
+WORKDIR /src
+
+COPY . .
+
+RUN dotnet restore
+WORKDIR "/src/mymy"
+RUN dotnet publish "mymy.csproj" -c Release -o /published 
+RUN cat "mymy.csproj"
+# Runtime image creation
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+
+# Uncomment the line below if running with HTTPS
+# ENV ASPNETCORE_URLS=https://+:443
+
+WORKDIR /app
+
+COPY --from=builder /published .
+
+ENTRYPOINT [ "dotnet", "mymy.dll" ]

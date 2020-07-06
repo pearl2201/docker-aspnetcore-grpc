@@ -1,0 +1,32 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "Pearl.Core.Protos";
+
+message EmptyResponse {
+    PearlMeta Meta = 1;
+}
+
+
+message PearlIndexMeta{
+    int32 PaginationCount = 1;
+    int32 PaginationPage = 2;
+    int32 PaginationLimit = 3;
+}
+message PearlMeta{
+    bool Success = 1;
+    string Message = 2;
+    int32 Code = 3;
+}
+
+message DetailPearlResponse{
+    PearlMeta Meta = 1;
+    google.protobuf.Any Response = 2;
+}
+
+message IndexPearlResponse {
+    PearlMeta Meta = 1;
+    PearlIndexMeta IndexMeta = 2;
+    repeated google.protobuf.Any Response = 3;
+}

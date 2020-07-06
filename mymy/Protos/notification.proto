@@ -1,0 +1,113 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "PearlNotification.Api.Protos";
+import "google/protobuf/Timestamp.proto";
+import "pearl.proto";
+
+service Notification {
+  rpc CreateNotificationTopic (CreateNotificationTopicInput) returns (EmptyResponse);
+  rpc CreateNotificationUser (CreateNotificationUserInput) returns (EmptyResponse);
+  rpc CreateTopic (TopicInput) returns (EmptyResponse);
+  rpc SubcribeUserToTopic (UserTopicInput) returns (EmptyResponse);
+  rpc UnsubcribeUserToTopic (UserTopicInput) returns (EmptyResponse);
+  rpc MultiSubcribeUserToTopic (MultiUserTopicInput) returns (EmptyResponse);
+  rpc MultiUnsubcribeUserToTopic (MultiUserTopicInput) returns (EmptyResponse);
+  rpc RetrieveUserNotification (QueryNotificationInput) returns (IndexPearlResponse);
+}
+
+
+
+message SuccessResponse {
+  
+}
+
+message CreateResponse {
+  bool success = 1;
+}
+
+
+ message KeyValuePairStringStringClass   {
+     string Key = 1;
+     string Value = 2;
+}
+message CreateNotificationTopicInput{
+     string ClientId =1;
+
+    repeated string Topics = 2;
+
+    string Title = 3;
+
+    string Body  = 4;
+
+    string ImageUri = 5;
+
+    string Link =6 ;
+
+     repeated KeyValuePairStringStringClass Datas = 7;
+
+    bool IsSendFcm = 8;
+}
+
+message CreateNotificationUserInput{
+    string ClientId =1;
+
+    repeated string UserIds = 2;
+
+    string Title = 3;
+
+    string Body  = 4;
+
+    string ImageUri = 5;
+
+    string Link =6 ;
+
+     repeated KeyValuePairStringStringClass Datas = 7;
+
+    bool IsSendFcm = 8;
+}
+
+message UserTopicInput{
+    string ClientId = 1;
+    string Topic = 2;
+    string PearlUserId = 3;
+    string PearlEmail = 4;
+    string PearlUsername = 5;
+}
+
+message MultiUserTopicInput{
+    string ClientId = 1;
+    repeated string Topics = 2;
+    repeated UserInput UserInputs = 3;
+}
+
+message UserInput{
+    string PearlUserId = 1;
+    string PearlEmail = 2;
+    string PearlUsername = 3;
+}
+
+message TopicInput{
+    string ClientId = 1;
+    string Topic = 2;
+}
+
+message QueryNotificationInput{
+    PearlIndexMeta Meta = 1;
+    string ClientId = 2;
+    string PearlUserId = 3;
+}
+message NotificationViewModel {
+    int32 Id = 1;
+    string Title = 2;
+    string ImageUri = 3;
+    string Body = 4;
+    string Link = 5;
+}
+
+message MessageUserViewModel{
+    int32 Id = 1;
+    NotificationViewModel Notification = 2;
+    repeated KeyValuePairStringStringClass Datas = 3;
+    bool Readed = 4;
+    google.protobuf.Timestamp ReadedAt = 5;
+}

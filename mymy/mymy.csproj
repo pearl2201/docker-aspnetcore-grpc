@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>b17a4460-7c00-42aa-86dc-1689908986d8</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.12.3" />
+    <PackageReference Include="Grpc" Version="2.30.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.29.0" />
+    <PackageReference Include="Grpc.Core" Version="2.30.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.30.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <Protobuf Include="Protos\pearl.proto" ProtoRoot="Protos\" Generator="MSBuild:Compile" />
+    <Protobuf Include="Protos\notification.proto" ProtoRoot="Protos\" Generator="MSBuild:Compile" />
+	
+  </ItemGroup>
+
+  <Target Name="MyProtoCompile">
+    <PropertyGroup>
+      <ProtoCCommand>protoc --plugin=protoc-gen-grpc=$(gRPC_PluginFullPath)  -I "\usr\local\include"  </ProtoCCommand>
+    </PropertyGroup>
+    <Message Importance="high" Text="$(ProtoCCommand)" />
+    <Exec Command="$(ProtoCCommand)" />
+  </Target>
+</Project>
